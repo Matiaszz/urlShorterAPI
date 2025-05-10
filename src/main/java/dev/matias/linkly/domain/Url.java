@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.UUID;
 
@@ -15,8 +16,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class Url {
-    @Id
-    private UUID id;
+    @MongoId
+    private String id;
 
     private String originalUrl;
     private String shortenedUrl;
