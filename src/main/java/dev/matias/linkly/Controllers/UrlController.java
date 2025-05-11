@@ -1,23 +1,22 @@
 package dev.matias.linkly.Controllers;
 
+import dev.matias.linkly.domain.Url;
 import dev.matias.linkly.dtos.UrlCreationDTO;
 import dev.matias.linkly.services.UrlService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
+
 
 @RestController
-@RequestMapping("/api/url")
+@RequestMapping("/api/url/")
 @RequiredArgsConstructor
 public class UrlController {
     private final UrlService urlService;
 
-    @PostMapping("/shorten")
+    @PostMapping("/shorten/")
     public ResponseEntity<String> createShortenedUrl(@RequestBody UrlCreationDTO rawUrl){
-
         String url = rawUrl.originalURL().trim();
 
         if (!urlService.isValidUrl(url)){
@@ -28,6 +27,9 @@ public class UrlController {
         String createdUrl = urlService.createShortUrl(url).getShortenedUrl();
         return ResponseEntity.ok(createdUrl);
     }
-
-
+    @GetMapping("/{shortenedUrl}/")
+    public RedirectView getByShortened(@PathVariable String shortenedUrl){
+        Url url = urlService.getByShortenedUrl(shortenedUrl);
+        return new RedirectView(url.getOriginalUrl());
+    }
 }
