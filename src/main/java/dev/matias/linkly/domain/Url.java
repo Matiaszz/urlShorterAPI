@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.time.LocalDateTime;
 
 @Document
 @Data
@@ -14,10 +15,16 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @AllArgsConstructor
 @Builder
 public class Url {
+
     @MongoId
     private String id;
 
     private String originalUrl;
     private String shortenedUrl;
-    private String createdAt;
+    private LocalDateTime createdAt;
+    private long expirationMinutes;
+
+    public boolean isExpired() {
+        return LocalDateTime.now().isAfter(createdAt.plusMinutes(expirationMinutes));
+    }
 }
